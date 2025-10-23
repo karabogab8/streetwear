@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEV. - Minimalistisk Streetwear</title>
+    <meta name="description" content="NEV. - Moderne streetwear for den urbane livsstilen">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Added fixed background video for entire site -->
+    <div class="background-video-container">
+        <video class="background-video" autoplay umuted loop playsinline>
+            <source src="https://ik.imagekit.io/bedir/Black%20Brown%20and%20Yellow%20Retro%20Aesthetic%20Analog%20Film%20Camera%20Memories%20Youtube%20Intro.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+    </div>
+
+    <!-- Video Intro Overlay -->
+    <div id="video-intro" class="video-intro active">
+        <video id="intro-video" autoplay muted playsinline>
+            <source src="https://ik.imagekit.io/bedir/Black%20Brown%20and%20Yellow%20Retro%20Aesthetic%20Analog%20Film%20Camera%20Memories%20Youtube%20Intro.mp4" type="video/mp4">
+        </video>
+        <button id="skip-intro" class="skip-btn" aria-label="Hopp over intro">
+            <span>Hopp over</span>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="#home" class="logo" aria-label="NEV. Hjem">
+                    <span class="logo-text">NEV<span class="logo-dot">.</span></span>
+                </a>
+
+                <nav class="nav" id="nav">
+                    <ul class="nav-list">
+                        <li><a href="#home" class="nav-link">Hjem</a></li>
+                        <li><a href="#shop" class="nav-link">Butikk</a></li>
+                        <li><a href="#about" class="nav-link">Om Oss</a></li>
+                        <li><a href="#contact" class="nav-link">Kontakt</a></li>
+                    </ul>
+                </nav>
+
+                <div class="header-actions">
+                    <button class="cart-btn" id="cart-btn" aria-label="Handlekurv">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 2L7 6H3L6 20H18L21 6H17L15 2H9Z"/>
+                            <circle cx="9" cy="20" r="1"/>
+                            <circle cx="15" cy="20" r="1"/>
+                        </svg>
+                        <span class="cart-count" id="cart-count">0</span>
+                    </button>
+                    <button class="hamburger" id="hamburger" aria-label="Meny" aria-expanded="false">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Home Section -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="hero-title-line">URBAN</span>
+                    <span class="hero-title-line">ESSENTIALS</span>
+                </h1>
+                <p class="hero-subtitle">Minimalistisk streetwear for den moderne livsstilen</p>
+                <a href="#shop" class="btn btn-primary">Utforsk Kolleksjonen</a>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&q=80" alt="NEV. Streetwear Kolleksjon" loading="eager">
+            </div>
+        </section>
+
+        <!-- New Drops Section -->
+        <section class="new-drops">
+            <div class="container">
+                <h2 class="section-title">Nye Slipp</h2>
+                <div class="drops-grid">
+                    <article class="drop-card">
+                        <div class="drop-image">
+                            <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&q=80" alt="Oversized Hoodie" loading="lazy">
+                            <button class="quick-add" data-product="2">Legg til</button>
+                        </div>
+                        <div class="drop-info">
+                            <h3 class="drop-name">Oversized Hoodie</h3>
+                            <p class="drop-price">899 kr</p>
+                        </div>
+                    </article>
+                    <article class="drop-card">
+                        <div class="drop-image">
+                            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80" alt="Essential T-Shirt" loading="lazy">
+                            <button class="quick-add" data-product="1">Legg til</button>
+                        </div>
+                        <div class="drop-info">
+                            <h3 class="drop-name">Essential T-Shirt</h3>
+                            <p class="drop-price">399 kr</p>
+                        </div>
+                    </article>
+                    <article class="drop-card">
+                        <div class="drop-image">
+                            <img src="https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600&q=80" alt="Classic Cap" loading="lazy">
+                            <button class="quick-add" data-product="3">Legg til</button>
+                        </div>
+                        <div class="drop-info">
+                            <h3 class="drop-name">Classic Cap</h3>
+                            <p class="drop-price">299 kr</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shop Section -->
+        <section id="shop" class="shop">
+            <div class="container">
+                <div class="shop-header">
+                    <h2 class="section-title">Butikk</h2>
+                    <div class="filter-controls">
+                        <button class="filter-btn active" data-filter="all">Alle</button>
+                        <button class="filter-btn" data-filter="tshirt">T-Shirts</button>
+                        <button class="filter-btn" data-filter="hoodie">Hoodies</button>
+                        <button class="filter-btn" data-filter="cap">Caps</button>
+                        <button class="filter-btn" data-filter="accessories">Tilbehør</button>
+                    </div>
+                </div>
+                <div class="products-grid" id="products-grid">
+                    <!-- Products will be dynamically loaded -->
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about">
+            <div class="container">
+                <div class="about-content">
+                    <div class="about-text">
+                        <h2 class="section-title">Om NEV.</h2>
+                        <p class="about-description">
+                            NEV. er mer enn bare klær – det er en livsstil. Vi skaper minimalistisk streetwear 
+                            for den urbane generasjonen som verdsetter kvalitet, enkelhet og autentisitet.
+                        </p>
+                        <p class="about-description">
+                            Hver kolleksjon er nøye kuratert med fokus på tidløst design, bærekraftige materialer 
+                            og perfekt passform. Vi tror på at mindre er mer, og at ekte stil kommer fra selvtillit.
+                        </p>
+                        <div class="about-values">
+                            <div class="value-item">
+                                <h3>Kvalitet</h3>
+                                <p>Premium materialer som varer</p>
+                            </div>
+                            <div class="value-item">
+                                <h3>Design</h3>
+                                <p>Tidløs minimalisme</p>
+                            </div>
+                            <div class="value-item">
+                                <h3>Bærekraft</h3>
+                                <p>Ansvarlig produksjon</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="about-image">
+                        <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&q=80" alt="NEV. Brand Story" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <div class="contact-content">
+                    <div class="contact-info">
+                        <h2 class="section-title">Kontakt Oss</h2>
+                        <p class="contact-description">
+                            Har du spørsmål eller tilbakemeldinger? Vi vil gjerne høre fra deg.
+                        </p>
+                        <div class="social-links">
+                            <a href="#" class="social-link" aria-label="Instagram">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-4.358-.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.205.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.204-.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="social-link" aria-label="TikTok">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="social-link" aria-label="Facebook">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <form class="contact-form" id="contact-form">
+                        <div class="form-group">
+                            <label for="name">Navn</label>
+                            <input type="text" id="name" name="name" required aria-required="true">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">E-post</label>
+                            <input type="email" id="email" name="email" required aria-required="true">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Melding</label>
+                            <textarea id="message" name="message" rows="5" required aria-required="true"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Melding</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">NEV<span class="logo-dot">.</span></h3>
+                    <p class="footer-text">Minimalistisk streetwear for den urbane livsstilen.</p>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-heading">Hurtiglenker</h4>
+                    <ul class="footer-links">
+                        <li><a href="#home">Hjem</a></li>
+                        <li><a href="#shop">Butikk</a></li>
+                        <li><a href="#about">Om Oss</a></li>
+                        <li><a href="#contact">Kontakt</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-heading">Kundeservice</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Frakt & Levering</a></li>
+                        <li><a href="#">Retur & Bytte</a></li>
+                        <li><a href="#">Størrelsesguide</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-heading">Nyhetsbrev</h4>
+                    <p class="footer-text">Få de siste nyhetene og eksklusive tilbud.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Din e-post" aria-label="E-post for nyhetsbrev" required>
+                        <button type="submit" class="btn btn-secondary">Abonner</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 NEV. Alle rettigheter reservert.Made by Bedir</p>
+                <div class="footer-legal">
+                    <a href="#">Personvern</a>
+                    <a href="#">Vilkår</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Shopping Cart Sidebar -->
+    <aside class="cart-sidebar" id="cart-sidebar" aria-hidden="true">
+        <div class="cart-header">
+            <h2>Handlekurv</h2>
+            <button class="cart-close" id="cart-close" aria-label="Lukk handlekurv">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <p class="cart-empty">Handlekurven din er tom</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Totalt:</span>
+                <span id="cart-total">0 kr</span>
+            </div>
+            <button class="btn btn-primary btn-full">Gå til Kassen</button>
+        </div>
+    </aside>
+
+    <div class="cart-overlay" id="cart-overlay"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

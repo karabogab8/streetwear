@@ -1,0 +1,1319 @@
+/* grunnleggende reset - fjerner standard margins og padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* farger og design tokens - her definerer vi hele fargepaletten */
+:root {
+  /* hovedfarger - holder det enkelt og minimalistisk */
+  --color-black: #1a1a1a;
+  --color-white: #fafafa;
+  --color-grey: #4a4a4a;
+  --color-warm-grey: #8a8a8a;
+  --color-accent: #d4ff00; /* neon gul for kontrast */
+  --color-accent-dark: #a8cc00;
+
+  /* fonter - bebas for overskrifter, inter for brødtekst */
+  --font-heading: "Bebas Neue", sans-serif;
+  --font-body: "Inter", sans-serif;
+
+  /* spacing system - bruker disse istedenfor hardkodede verdier */
+  --spacing-xs: 0.625rem;
+  --spacing-sm: 1.125rem;
+  --spacing-md: 2.25rem;
+  --spacing-lg: 4.5rem;
+  --spacing-xl: 7rem;
+
+  /* transitions - forskjellige hastigheter for ulike effekter */
+  --transition-fast: 0.2s ease-out;
+  --transition-base: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* glass effekt variabler - iOS-stil frosted glass look */
+  --glass-bg: rgba(255, 255, 255, 0.08); /* veldig transparent bakgrunn */
+  --glass-border: rgba(255, 255, 255, 0.15); /* subtil border */
+  --glass-blur: blur(10px); /* blur styrke for backdrop */
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08); /* myk skygge */
+}
+
+html {
+  scroll-behavior: smooth; /* smooth scrolling mellom seksjoner */
+}
+
+/* body setup - transparent så videoen vises gjennom */
+body {
+  font-family: var(--font-body);
+  background-color: transparent; /* viktig for video bakgrunn */
+  color: var(--color-black);
+  line-height: 1.65; /* god lesbarhet */
+  overflow-x: hidden; /* ingen horisontal scroll */
+  position: relative;
+  -webkit-font-smoothing: antialiased; /* glattere fonter på mac */
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* når menyen er åpen, låser vi scrolling */
+body.no-scroll {
+  overflow: hidden;
+}
+
+/* bakgrunnsvideo container - fixed så den alltid er synlig */
+.background-video-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: -1; /* bak alt annet innhold */
+  overflow: hidden;
+}
+
+/* videoen selv - dekker hele skjermen */
+.background-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* fyller hele området uten å strekke */
+  object-position: center;
+}
+
+/* veldig lett overlay over video - bare for å dempe litt */
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.03); /* nesten usynlig */
+  pointer-events: none; /* klikk går gjennom */
+}
+
+/* overskrifter - bruker bebas neue for den streetwear følelsen */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  line-height: 1.1; /* tett line-height for impact */
+  letter-spacing: 0.015em;
+}
+
+/* section titles - store overskrifter med glass effekt */
+.section-title {
+  font-size: clamp(2.5rem, 5vw, 4rem); /* responsiv størrelse */
+  margin-bottom: var(--spacing-md);
+  text-transform: uppercase;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur); /* safari support */
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: 16px;
+  display: inline-block;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* container for innhold - max-width og sentrert */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-sm);
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 var(--spacing-md); /* mer padding på større skjermer */
+  }
+}
+
+/* intro video overlay - vises ved page load */
+.video-intro {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: var(--color-black);
+  z-index: 9999; /* over alt annet */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none; /* usynlig som standard */
+  transition: opacity var(--transition-slow);
+}
+
+/* når intro er aktiv */
+.video-intro.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.video-intro video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* skip intro knapp - med pulserende animasjon */
+.skip-btn {
+  position: absolute;
+  bottom: var(--spacing-md);
+  right: var(--spacing-md);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  color: var(--color-white);
+  padding: 0.875rem 1.5rem;
+  border-radius: 50px; /* helt rund */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all var(--transition-base);
+  animation: pulse 2s infinite; /* trekker oppmerksomhet */
+  box-shadow: var(--glass-shadow);
+}
+
+.skip-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateX(5px); /* glir litt til høyre */
+}
+
+/* pulserende effekt for skip knappen */
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(255, 255, 255, 0); /* ekspanderer og fader ut */
+  }
+}
+
+/* header - fixed topp med glass effekt */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  z-index: 1000;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.125rem 0;
+}
+
+/* logo styling - enkel og bold */
+.logo {
+  text-decoration: none;
+  color: var(--color-black);
+  text-shadow: 0 2px 12px rgba(255, 255, 255, 0.4); /* glow effekt */
+}
+
+.logo-text {
+  font-family: var(--font-heading);
+  font-size: 2.25rem;
+  letter-spacing: 0.08em; /* litt spacing mellom bokstaver */
+}
+
+/* den gule prikken i logoen */
+.logo-dot {
+  color: var(--color-accent);
+}
+
+/* navigasjon - sidebar på mobil, inline på desktop */
+.nav {
+  position: fixed;
+  top: 0;
+  right: -100%; /* skjult utenfor skjermen */
+  width: 100%;
+  max-width: 400px;
+  height: 100vh;
+  background: rgba(26, 26, 26, 0.75); /* mørkere glass effekt */
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  padding: var(--spacing-xl) var(--spacing-md);
+  transition: right var(--transition-base);
+  z-index: 999;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--glass-shadow);
+}
+
+/* når menyen er åpen */
+.nav.active {
+  right: 0; /* glir inn fra høyre */
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+/* nav lenker - store og bold på mobil */
+.nav-link {
+  color: var(--color-white);
+  text-decoration: none;
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  text-transform: uppercase;
+  transition: color var(--transition-fast);
+  display: inline-block;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+  color: var(--color-accent);
+  transform: translateX(10px); /* glir til høyre ved hover */
+}
+
+/* desktop navigasjon - helt annerledes layout */
+@media (min-width: 1024px) {
+  .nav {
+    position: static; /* ikke fixed lenger */
+    width: auto;
+    max-width: none;
+    height: auto;
+    background: transparent;
+    padding: 0;
+  }
+
+  .nav-list {
+    flex-direction: row; /* horisontal istedenfor vertikal */
+    gap: var(--spacing-md);
+  }
+
+  .nav-link {
+    color: var(--color-black);
+    font-size: 1rem; /* mye mindre på desktop */
+    text-shadow: 0 2px 8px rgba(255, 255, 255, 0.6);
+  }
+
+  .nav-link:hover,
+  .nav-link:focus {
+    color: var(--color-grey);
+    transform: none; /* ingen slide effekt på desktop */
+  }
+}
+
+/* header actions - handlekurv og hamburger */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+/* handlekurv knapp med counter badge */
+.cart-btn {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  color: var(--color-black);
+  transition: transform var(--transition-fast);
+  filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.8));
+}
+
+.cart-btn:hover {
+  transform: scale(1.1); /* litt større ved hover */
+}
+
+/* antall items i kurv - liten sirkel badge */
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: var(--color-accent);
+  color: var(--color-black);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* hamburger meny ikon - tre streker */
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  z-index: 1001;
+}
+
+.hamburger span {
+  width: 25px;
+  height: 2px;
+  background: var(--color-black);
+  transition: all var(--transition-base);
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+/* hamburger animasjon til X når aktiv */
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(7px, 7px);
+  background: var(--color-white);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0; /* midterste linje forsvinner */
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -7px);
+  background: var(--color-white);
+}
+
+/* skjul hamburger på desktop */
+@media (min-width: 1024px) {
+  .hamburger {
+    display: none;
+  }
+}
+
+/* main content - margin for fixed header */
+.main {
+  margin-top: 85px; /* høyde av header */
+  position: relative;
+  z-index: 1;
+}
+
+/* hero seksjon - første ting brukeren ser */
+.hero {
+  min-height: calc(100vh - 85px);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+  align-items: center;
+  padding: var(--spacing-lg) 0;
+  background: transparent; /* video vises gjennom */
+}
+
+@media (min-width: 768px) {
+  .hero {
+    grid-template-columns: 1.1fr 0.9fr; /* tekst tar litt mer plass */
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+}
+
+.hero-content {
+  animation: fadeInUp 1s ease; /* fader inn fra bunnen */
+  padding: 0 var(--spacing-md);
+}
+
+/* hero tittel - stor og bold med glass effekt */
+.hero-title {
+  font-size: clamp(3.5rem, 9vw, 7rem); /* skalerer med viewport */
+  line-height: 0.88; /* veldig tett for impact */
+  margin-bottom: var(--spacing-md);
+  color: var(--color-black);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: 18px;
+  display: inline-block;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.hero-title-line {
+  display: block;
+  overflow: hidden;
+}
+
+/* andre linje i hero tittel - annen farge */
+.hero-title-line:nth-child(2) {
+  color: var(--color-accent-dark);
+}
+
+/* undertekst i hero */
+.hero-subtitle {
+  font-size: 1.15rem;
+  color: var(--color-accent-dark);
+  margin-bottom: var(--spacing-md);
+  max-width: 520px;
+  line-height: 1.7;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: 14px;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* hero bilde - fader inn litt senere */
+.hero-image {
+  position: relative;
+  animation: fadeIn 1.5s ease;
+  padding: 0 var(--spacing-md);
+}
+
+.hero-image img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 18px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
+}
+
+/* knapper - gjenbrukbar styling */
+.btn {
+  display: inline-block;
+  padding: 1.125rem 2.5rem;
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  letter-spacing: 0.06em;
+  border-radius: 8px;
+}
+
+/* primær knapp - sort bakgrunn */
+.btn-primary {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background: var(--color-grey);
+  transform: translateY(-3px); /* løfter seg ved hover */
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+}
+
+/* sekundær knapp - gul accent farge */
+.btn-secondary {
+  background: var(--color-accent);
+  color: var(--color-black);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+  background: var(--color-accent-dark);
+  transform: translateY(-2px);
+}
+
+/* full bredde knapp */
+.btn-full {
+  width: 100%;
+}
+
+/* nye slipp seksjon */
+.new-drops {
+  padding: var(--spacing-xl) 0;
+  background: transparent;
+}
+
+/* grid for drop cards - responsiv */
+.drops-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-md);
+}
+
+/* individuelt drop card med glass effekt */
+.drop-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+  animation: fadeInUp 0.6s ease backwards;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* staggered animation - kommer inn ett om gangen */
+.drop-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.drop-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.drop-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+/* hover effekt - løfter seg */
+.drop-card:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+}
+
+/* bilde container i drop card */
+.drop-image {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 4; /* portrett format */
+}
+
+.drop-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+/* zoom effekt på bilde ved hover */
+.drop-card:hover .drop-image img {
+  transform: scale(1.05);
+}
+
+/* quick add knapp - vises ved hover */
+.quick-add {
+  position: absolute;
+  bottom: var(--spacing-sm);
+  left: 50%;
+  transform: translateX(-50%) translateY(100%); /* skjult under */
+  background: var(--color-black);
+  color: var(--color-white);
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  opacity: 0;
+}
+
+/* glir opp ved hover på card */
+.drop-card:hover .quick-add {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.quick-add:hover {
+  background: var(--color-accent);
+  color: var(--color-black);
+}
+
+/* info seksjon i drop card */
+.drop-info {
+  padding: var(--spacing-md);
+}
+
+.drop-name {
+  font-family: var(--font-heading);
+  font-size: 1.65rem;
+  margin-bottom: var(--spacing-xs);
+  letter-spacing: 0.02em;
+}
+
+.drop-price {
+  font-weight: 600;
+  color: var(--color-warm-grey);
+  font-size: 1.1rem;
+}
+
+/* butikk seksjon */
+.shop {
+  padding: var(--spacing-xl) 0;
+  background: transparent;
+}
+
+.shop-header {
+  margin-bottom: var(--spacing-lg);
+}
+
+/* filter knapper - kategori valg */
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: var(--spacing-md);
+}
+
+.filter-btn {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  color: var(--color-black);
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-radius: 14px;
+  box-shadow: var(--glass-shadow);
+}
+
+.filter-btn:hover,
+.filter-btn:focus {
+  background: rgba(26, 26, 26, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transform: translateY(-2px);
+}
+
+/* aktiv filter - mørkere */
+.filter-btn.active {
+  background: rgba(26, 26, 26, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(26, 26, 26, 0.25);
+  font-weight: 600;
+}
+
+/* produkter grid - responsiv layout */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 kolonner på mobil */
+  gap: var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 på tablet */
+  }
+}
+
+@media (min-width: 1024px) {
+  .products-grid {
+    grid-template-columns: repeat(4, 1fr); /* 4 på desktop */
+  }
+}
+
+/* produkt card - lik styling som drop card */
+.product-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all var(--transition-base);
+  opacity: 0;
+  animation: fadeInUp 0.6s ease forwards;
+  box-shadow: var(--glass-shadow);
+}
+
+/* skjul filtrerte produkter */
+.product-card.hidden {
+  display: none;
+}
+
+.product-card:hover {
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
+  transform: translateY(-8px);
+}
+
+.product-image {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.08);
+}
+
+.product-info {
+  padding: var(--spacing-md);
+}
+
+.product-name {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  margin-bottom: var(--spacing-xs);
+  letter-spacing: 0.02em;
+}
+
+/* kategori tag */
+.product-category {
+  font-size: 0.8rem;
+  color: var(--color-warm-grey);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--spacing-xs);
+  font-weight: 500;
+}
+
+.product-price {
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--color-black);
+}
+
+.product-actions {
+  padding: 0 var(--spacing-md) var(--spacing-md);
+}
+
+/* legg til i kurv knapp */
+.add-to-cart {
+  width: 100%;
+  background: var(--color-black);
+  color: var(--color-white);
+  border: none;
+  padding: 0.875rem;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 8px;
+}
+
+.add-to-cart:hover,
+.add-to-cart:focus {
+  background: var(--color-accent);
+  color: var(--color-black);
+  transform: translateY(-2px);
+}
+
+/* om oss seksjon - mørkere bakgrunn */
+.about {
+  padding: var(--spacing-xl) 0;
+  background: rgba(26, 26, 26, 0.08);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  color: var(--color-white);
+  border-top: 1px solid var(--glass-border);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.about-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .about-content {
+    grid-template-columns: 1fr 1fr; /* to kolonner på desktop */
+  }
+}
+
+.about-description {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  margin-bottom: var(--spacing-md);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* verdier grid - kvalitet, design, bærekraft */
+.about-values {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
+
+.value-item h3 {
+  font-family: var(--font-heading);
+  font-size: 1.65rem;
+  margin-bottom: var(--spacing-xs);
+  color: var(--color-accent); /* gul for å skille seg ut */
+  letter-spacing: 0.02em;
+}
+
+.value-item p {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.about-image {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.about-image img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 18px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.2);
+}
+
+/* kontakt seksjon */
+.contact {
+  padding: var(--spacing-xl) 0;
+  background: transparent;
+}
+
+.contact-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+}
+
+@media (min-width: 768px) {
+  .contact-content {
+    grid-template-columns: 1fr 1fr; /* info og form side om side */
+  }
+}
+
+.contact-description {
+  font-size: 1.15rem;
+  color: var(--color-grey);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.7;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: 14px;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* sosiale medier lenker */
+.social-links {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+}
+
+.social-link {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-black);
+  color: var(--color-white);
+  border-radius: 50%; /* perfekt sirkel */
+  transition: all var(--transition-base);
+}
+
+.social-link:hover,
+.social-link:focus {
+  background: var(--color-accent);
+  color: var(--color-black);
+  transform: translateY(-6px); /* hopper opp */
+}
+
+/* kontaktskjema */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+/* form labels med glass effekt */
+.form-group label {
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  padding: 0.5rem 0.875rem;
+  border-radius: 10px;
+  display: inline-block;
+  width: fit-content;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* input felter med glass effekt */
+.form-group input,
+.form-group textarea {
+  padding: 0.875rem 1.125rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  transition: all var(--transition-base);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
+}
+
+/* focus state - mørkere og løfter seg */
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: rgba(26, 26, 26, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+/* footer - mørkere glass effekt */
+.footer {
+  background: rgba(26, 26, 26, 0.15);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  color: var(--color-white);
+  padding: var(--spacing-xl) 0 var(--spacing-md);
+  border-top: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* footer grid - responsiv layout */
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.footer-title {
+  font-family: var(--font-heading);
+  font-size: 2.25rem;
+  margin-bottom: var(--spacing-sm);
+  letter-spacing: 0.05em;
+}
+
+.footer-text {
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+}
+
+.footer-heading {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-accent);
+  letter-spacing: 0.02em;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.footer-links a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.footer-links a:hover,
+.footer-links a:focus {
+  color: var(--color-accent);
+}
+
+/* nyhetsbrev form */
+.newsletter-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.newsletter-form input {
+  padding: var(--spacing-sm);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  color: var(--color-white);
+  border-radius: 12px;
+  font-family: var(--font-body);
+  box-shadow: var(--glass-shadow);
+}
+
+.newsletter-form input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* footer bunn - copyright og legal lenker */
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+@media (min-width: 768px) {
+  .footer-bottom {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+.footer-legal {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.footer-legal a {
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.footer-legal a:hover,
+.footer-legal a:focus {
+  color: var(--color-accent);
+}
+
+/* handlekurv sidebar - glir inn fra høyre */
+.cart-sidebar {
+  position: fixed;
+  top: 0;
+  right: -100%; /* skjult utenfor skjermen */
+  width: 100%;
+  max-width: 450px;
+  height: 100vh;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: -5px 0 40px rgba(0, 0, 0, 0.18);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  transition: right var(--transition-base);
+  border-left: 1px solid var(--glass-border);
+}
+
+/* når kurven er åpen */
+.cart-sidebar.active {
+  right: 0;
+}
+
+.cart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.cart-header h2 {
+  font-family: var(--font-heading);
+  font-size: 1.65rem;
+  letter-spacing: 0.02em;
+}
+
+/* lukk kurv knapp - roterer ved hover */
+.cart-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  transition: transform var(--transition-fast);
+}
+
+.cart-close:hover {
+  transform: rotate(90deg); /* spinner rundt */
+}
+
+/* scrollbar område for items */
+.cart-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-md);
+}
+
+/* tom kurv melding */
+.cart-empty {
+  text-align: center;
+  color: var(--color-grey);
+  padding: var(--spacing-lg) 0;
+}
+
+/* individuelt item i kurv */
+.cart-item {
+  display: flex;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  animation: slideInRight 0.3s ease; /* glir inn fra høyre */
+}
+
+.cart-item-image {
+  width: 80px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.cart-item-details {
+  flex: 1;
+}
+
+.cart-item-name {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  margin-bottom: var(--spacing-xs);
+  letter-spacing: 0.01em;
+}
+
+.cart-item-price {
+  font-weight: 600;
+  color: var(--color-grey);
+}
+
+/* antall kontroller - plus og minus knapper */
+.cart-item-quantity {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-xs);
+}
+
+.quantity-btn {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--color-black);
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.quantity-btn:hover {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+/* fjern item knapp */
+.cart-item-remove {
+  background: none;
+  border: none;
+  color: var(--color-grey);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  transition: color var(--transition-fast);
+}
+
+.cart-item-remove:hover {
+  color: #e74c3c; /* rød for slett */
+}
+
+/* kurv footer - total og checkout knapp */
+.cart-footer {
+  padding: var(--spacing-md);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.cart-total {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-heading);
+  font-size: 1.65rem;
+  margin-bottom: var(--spacing-md);
+  letter-spacing: 0.02em;
+}
+
+/* overlay bak kurv - demper resten av siden */
+.cart-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-base);
+}
+
+.cart-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* animasjoner - brukes flere steder */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px); /* starter lenger ned */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px); /* starter til høyre */
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* focus styling for tilgjengelighet */
+*:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* respekterer brukerens bevegelsesinnstillinger */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
