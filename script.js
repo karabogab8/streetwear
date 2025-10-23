@@ -33,7 +33,7 @@ const products = [
     name: "Essential T-Shirt",
     category: "tshirt",
     price: 399,
-    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80",
+    image: "https://images.unsplash.com/photo-1521572163474-6864f95609a7?w=600&q=80",
   },
   {
     id: 2,
@@ -68,7 +68,7 @@ const products = [
     name: "Beanie",
     category: "accessories",
     price: 249,
-    image: "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=600&q=80",
+    image: "https://images.unsplash.com/photo-1576871337622-98d48d1cf7be1a?w=600&q=80",
   },
   {
     id: 7,
@@ -335,10 +335,58 @@ const videoIntro = document.getElementById("video-intro")
 const introVideo = document.getElementById("intro-video")
 const skipBtn = document.getElementById("skip-intro")
 
+const backgroundVideo = document.querySelector(".background-video")
+
+// sørger for at bakgrunnsvidoen alltid spiller, spesielt på mobil
+if (backgroundVideo) {
+  // prøver å starte videoen
+  const playVideo = () => {
+    backgroundVideo.play().catch((err) => {
+      console.log("[v0] Video autoplay blokkert, prøver igjen:", err)
+      // hvis autoplay blokkeres, prøv igjen når bruker interagerer
+      document.addEventListener(
+        "touchstart",
+        () => {
+          backgroundVideo.play()
+        },
+        { once: true },
+      )
+    })
+  }
+
+  // starter videoen når siden laster
+  playVideo()
+
+  // sørger for at videoen fortsetter å spille hvis den stopper
+  backgroundVideo.addEventListener("pause", () => {
+    console.log("[v0] Bakgrunnsvideo pauset, starter på nytt")
+    playVideo()
+  })
+
+  // når videoen er ferdig, start på nytt (backup for loop attribute)
+  backgroundVideo.addEventListener("ended", () => {
+    console.log("[v0] Bakgrunnsvideo ferdig, looper")
+    backgroundVideo.currentTime = 0
+    playVideo()
+  })
+
+  // håndterer visibility changes (når bruker bytter tab)
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && backgroundVideo.paused) {
+      console.log("[v0] Tab aktiv igjen, starter video")
+      playVideo()
+    }
+  })
+}
+
 // skjuler intro video
 function hideIntro() {
   videoIntro.classList.remove("active")
   document.body.classList.remove("no-scroll")
+  // sørger for at bakgrunnsvidoen spiller etter intro
+  if (backgroundVideo) {
+    backgroundVideo.play()
+  }
 }
 
 // forskjellige måter å lukke intro på
